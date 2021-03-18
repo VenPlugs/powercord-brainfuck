@@ -69,9 +69,9 @@ module.exports = class Brainfuck extends Plugin {
 			return false;
 		}
 
-		const ext = platform === "win32" ? ".exe" : "";
-		this.brainfuckPath = path.join(__dirname, "brainfuck", ext);
-		this.ascii2brainfuckPath = path.join(__dirname, "ascii2brainfuck", ext);
+		const ext = platform === "win32" ? ".exe" : ".o";
+		this.brainfuckPath = path.join(__dirname, "brainfuck" + ext);
+		this.ascii2brainfuckPath = path.join(__dirname, "ascii2brainfuck" + ext);
 
 		const result = await Promise.all([this.downloadIfNotExist(this.brainfuckPath), this.downloadIfNotExist(this.ascii2brainfuckPath)]);
 
