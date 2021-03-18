@@ -2,7 +2,7 @@ const { Plugin } = require("powercord/entities");
 const { get, post } = require("powercord/http");
 const { clipboard } = require("electron");
 const { promisify } = require("util");
-const { promises: fs, constants, existsSync } = require("fs");
+const { promises: fs, existsSync } = require("fs");
 const path = require("path");
 
 const execFile = promisify(require("child_process").execFile);
@@ -69,7 +69,7 @@ module.exports = class Brainfuck extends Plugin {
 			return false;
 		}
 
-		const ext = platform === "win32" ? ".exe" : ".o";
+		const ext = platform === "win32" ? ".exe" : "-linux";
 		this.brainfuckPath = path.join(__dirname, "brainfuck" + ext);
 		this.ascii2brainfuckPath = path.join(__dirname, "ascii2brainfuck" + ext);
 

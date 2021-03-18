@@ -1,6 +1,6 @@
 # gitingore brainfuck binaries
 
-brainfuck.o
+brainfuck-linux
 brainfuck.exe
-ascii2brainfuck.o
+ascii2brainfuck-linux
 ascii2brainfuck.exe
