@@ -8,7 +8,7 @@ const path = require("path");
 const execFile = promisify(require("child_process").execFile);
 
 module.exports = class Brainfuck extends Plugin {
-	binaryRepo = "https://github.com/Vendicated/Brainfuck-Interpreter/releases/latest/download/";
+	binaryRepo = "https://github.com/Vendicated/BrainfuckInterpreter/releases/latest/download/";
 	hastebin = "https://haste.powercord.dev/";
 
 	async startPlugin() {
