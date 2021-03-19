@@ -46,6 +46,6 @@ Examples:
 
 ```xml
 .tobrainfuck --send Hello World!
-.brainfuck https://google.com
-.brainfuck --send --clipboard
+.tobrainfuck https://google.com
+.tobrainfuck --send --clipboard
 ```
