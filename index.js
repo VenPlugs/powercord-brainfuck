@@ -123,10 +123,16 @@ module.exports = class Brainfuck extends Plugin {
 
 		const { stdout: result, stderr } = await execFile(this.brainfuckPath, [input]).catch(stderr => ({ stderr }));
 		if (stderr) {
+			if (stderr.message.toLowerCase().includes("invalid brainfuck"))
+				return {
+					send: false,
+					result: "Invalid brainfuck."
+				};
+
 			console.error("[BRAINFUCK]", stderr);
 			return {
 				send: false,
-				result: "I'm sorry, something went wrong. Check the console for more info"
+				result: "I'm sorry, something went wrong. Check the console for more info."
 			};
 		}
 
@@ -149,7 +155,7 @@ module.exports = class Brainfuck extends Plugin {
 			console.error("[BRAINFUCK]".stderr);
 			return {
 				send: false,
-				result: "I'm sorry, something went wrong. Check the console for more info"
+				result: "I'm sorry, something went wrong. Check the console for more info."
 			};
 		}
 
