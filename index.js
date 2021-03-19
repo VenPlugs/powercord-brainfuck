@@ -106,8 +106,10 @@ module.exports = class Brainfuck extends Plugin {
 		} else if (input.startsWith("http")) {
 			input = await this.fetch(input);
 		} else {
-			// Escape quotes and wrap into quotes
-			input = `"${input.replace(/"/g, '\\"')}"`;
+			// Escape quotes
+			input = input.replace(/"/g, '\\"');
+
+			if (process.platform === "win32") input = `"${input}"`;
 		}
 
 		return {
