@@ -75,7 +75,7 @@ module.exports = class Brainfuck extends Plugin {
 			return false;
 		}
 
-		const ext = extensions[platform];
+		const ext = this.extensions[platform];
 		this.brainfuckPath = path.join(__dirname, "brainfuck" + ext);
 		this.ascii2brainfuckPath = path.join(__dirname, "ascii2brainfuck" + ext);
 
