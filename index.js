@@ -152,7 +152,7 @@ module.exports = class Brainfuck extends Plugin {
 
 		const { stdout: result, stderr } = await execFile(this.ascii2brainfuckPath, [input]).catch(stderr => ({ stderr }));
 		if (stderr) {
-			console.error("[BRAINFUCK]".stderr);
+			console.error("[BRAINFUCK]", stderr);
 			return {
 				send: false,
 				result: "I'm sorry, something went wrong. Check the console for more info."
