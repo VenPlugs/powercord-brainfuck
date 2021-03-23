@@ -11,6 +11,12 @@ module.exports = class Brainfuck extends Plugin {
 	binaryRepo = "https://github.com/Vendicated/BrainfuckInterpreter/releases/latest/download/";
 	hastebin = "https://haste.powercord.dev/";
 
+	extensions = {
+		win32: ".exe",
+		darwin: "-osx",
+		linux: "-linux"
+	}
+
 	async startPlugin() {
 		const canRun = await this.downloadBinaries();
 		if (canRun === false) return;
@@ -64,12 +70,12 @@ module.exports = class Brainfuck extends Plugin {
 	async downloadBinaries() {
 		const { platform } = process;
 
-		if (!["win32", "linux"].includes(platform)) {
+		if (!["win32", "linux", "darwin"].includes(platform)) {
 			console.error(`Sorry! Unsupported platform ${platform}.`);
 			return false;
 		}
 
-		const ext = platform === "win32" ? ".exe" : "-linux";
+		const ext = extensions[platform];
 		this.brainfuckPath = path.join(__dirname, "brainfuck" + ext);
 		this.ascii2brainfuckPath = path.join(__dirname, "ascii2brainfuck" + ext);
 
