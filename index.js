@@ -62,7 +62,7 @@ module.exports = class Brainfuck extends Plugin {
 			const { body } = await post(`${this.hastebin}documents`).send(text);
 			return `The result was too long, so I uploaded it to hastebin instead!\n\n${this.hastebin}${body.key}`;
 		} catch (err) {
-			console.error(err);
+			this.errorlog(err);;
 			return `The result was too long, and I was unable to upload it to ${this.hastebin}. Sorry!`;
 		}
 	}
@@ -72,7 +72,7 @@ module.exports = class Brainfuck extends Plugin {
 
 		const ext = this.extensions[platform];
 		if (ext === undefined) {
-			console.error(`Sorry! Unsupported platform ${platform}.`);
+			this.errorlog(`Sorry! Unsupported platform ${platform}.`);
 			return false;
 		}
 		
@@ -96,8 +96,8 @@ module.exports = class Brainfuck extends Plugin {
 			await fs.chmod(filePath, "755");
 			return true;
 		} catch (error) {
-			console.error(`Something went wrong while downloading ${fileName} from ${url}`);
-			console.error(error);
+			this.errorlog(`Something went wrong while downloading ${fileName} from ${url}`);
+			this.errorlog(error);
 			return false;
 		}
 	}
@@ -135,7 +135,7 @@ module.exports = class Brainfuck extends Plugin {
 					result: "Invalid brainfuck."
 				};
 
-			console.error("[BRAINFUCK]", stderr);
+			this.errorlog(stderr);
 			return {
 				send: false,
 				result: "I'm sorry, something went wrong. Check the console for more info."
@@ -158,7 +158,7 @@ module.exports = class Brainfuck extends Plugin {
 
 		const { stdout: result, stderr } = await execFile(this.ascii2brainfuckPath, [input]).catch(stderr => ({ stderr }));
 		if (stderr) {
-			console.error("[BRAINFUCK]", stderr);
+			this.errorlog(stderr);
 			return {
 				send: false,
 				result: "I'm sorry, something went wrong. Check the console for more info."
@@ -170,4 +170,9 @@ module.exports = class Brainfuck extends Plugin {
 			result: await this.formatText(result, "bf")
 		};
 	}
+
+	errorlog(text) {
+		console.error("[POWERCORD-BRAINFUCK]", text)
+	}
+
 };
