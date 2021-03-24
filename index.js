@@ -75,7 +75,7 @@ module.exports = class Brainfuck extends Plugin {
 			console.error(`Sorry! Unsupported platform ${platform}.`);
 			return false;
 		}
-
+		
 		this.brainfuckPath = path.join(__dirname, "brainfuck" + ext);
 		this.ascii2brainfuckPath = path.join(__dirname, "ascii2brainfuck" + ext);
 
