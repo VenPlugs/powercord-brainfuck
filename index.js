@@ -172,7 +172,7 @@ module.exports = class Brainfuck extends Plugin {
 	}
 
 	errorlog(text) {
-		console.error("[POWERCORD-BRAINFUCK]", text)
+		console.error("[POWERCORD-BRAINFUCK]", text);
 	}
 
 };
