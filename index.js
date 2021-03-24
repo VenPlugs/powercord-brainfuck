@@ -70,12 +70,12 @@ module.exports = class Brainfuck extends Plugin {
 	async downloadBinaries() {
 		const { platform } = process;
 
-		if (!["win32", "linux", "darwin"].includes(platform)) {
+		const ext = this.extensions[platform];
+		if (ext === undefined) {
 			console.error(`Sorry! Unsupported platform ${platform}.`);
 			return false;
 		}
 
-		const ext = this.extensions[platform];
 		this.brainfuckPath = path.join(__dirname, "brainfuck" + ext);
 		this.ascii2brainfuckPath = path.join(__dirname, "ascii2brainfuck" + ext);
 
