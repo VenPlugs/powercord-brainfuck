@@ -62,7 +62,7 @@ module.exports = class Brainfuck extends Plugin {
 			const { body } = await post(`${this.hastebin}documents`).send(text);
 			return `The result was too long, so I uploaded it to hastebin instead!\n\n${this.hastebin}${body.key}`;
 		} catch (err) {
-			this.errorlog(err);;
+			this.errorlog(err);
 			return `The result was too long, and I was unable to upload it to ${this.hastebin}. Sorry!`;
 		}
 	}
