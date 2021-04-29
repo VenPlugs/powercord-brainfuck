@@ -2,11 +2,11 @@
 
 This is a powercord module that allows you to convert between brainfuck and plain text straight from discord. In both directions!
 
-On first launch it will download two platform specific exes to handle the converting, as it would be pretty inefficient to run brainfuck with javascript.
+On first launch it will download a platform specific binary to handle the converting, as it would be pretty inefficient to run brainfuck with javascript.
 
-These binaries are downloaded from [here](https://github.com/Vendicated/Brainfuck-Interpreter/releases/latest).
+This binary is downloaded from [here](https://github.com/Vendicated/Brainfuck-Interpreter/releases/latest).
 
-The code for aforementioned binaries is licensed under the GPL-3.0 license and can be found [here](https://github.com/Vendicated/Brainfuck-Interpreter)
+The code for the aformentioned binary is licensed under the GPL-3.0 license and can be found [here](https://github.com/Vendicated/Brainfuck-Interpreter)
 
 ## Commands
 
