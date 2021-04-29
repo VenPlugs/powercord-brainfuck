@@ -1,7 +1,7 @@
 {
-  "name": "brainfuck",
-  "version": "0.1.0",
-  "description": "Convert brainfuck to ascii and vice versa",
-  "author": "Vendicated",
-  "license": "AGPL-3.0"
+	"name": "brainfuck",
+	"version": "1.0.0",
+	"description": "Convert brainfuck to ascii and vice versa",
+	"author": "Vendicated",
+	"license": "AGPL-3.0"
 }
