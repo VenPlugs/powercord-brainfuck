@@ -2,7 +2,7 @@ const { Plugin } = require("powercord/entities");
 const { get, post } = require("powercord/http");
 const { clipboard } = require("electron");
 const { promisify } = require("util");
-const { promises: fs, existsSync } = require("fs");
+const { promises: fs, existsSync, unlinkSync } = require("fs");
 const path = require("path");
 
 const execFile = promisify(require("child_process").execFile);
@@ -13,12 +13,11 @@ module.exports = class Brainfuck extends Plugin {
 
 	extensions = {
 		win32: ".exe",
-		darwin: "-osx",
 		linux: "-linux"
-	}
+	};
 
 	async startPlugin() {
-		const canRun = await this.downloadBinaries();
+		const canRun = await this.downloadBinary();
 		if (canRun === false) return;
 
 		powercord.api.commands.registerCommand({
@@ -62,42 +61,43 @@ module.exports = class Brainfuck extends Plugin {
 			const { body } = await post(`${this.hastebin}documents`).send(text);
 			return `The result was too long, so I uploaded it to hastebin instead!\n\n${this.hastebin}${body.key}`;
 		} catch (err) {
-			console.error(err);
+			this.error(err);
 			return `The result was too long, and I was unable to upload it to ${this.hastebin}. Sorry!`;
 		}
 	}
 
-	async downloadBinaries() {
+	async downloadBinary() {
 		const { platform } = process;
 
-		if (!["win32", "linux", "darwin"].includes(platform)) {
-			console.error(`Sorry! Unsupported platform ${platform}.`);
+		const ext = this.extensions[platform];
+
+		if (!ext) {
+			this.error(`Sorry! Unsupported platform ${platform}.`);
 			return false;
 		}
 
-		const ext = this.extensions[platform];
+		const firstRun = this.settings.get("firstRun", true);
+		this.settings.set("firstRun", false);
+
 		this.brainfuckPath = path.join(__dirname, "brainfuck" + ext);
-		this.ascii2brainfuckPath = path.join(__dirname, "ascii2brainfuck" + ext);
+		if (existsSync(this.brainfuckPath)) {
+			if (firstRun) {
+				unlinkSync(this.brainfuckPath);
+				const ascii2brainfuckPath = path.join(__dirname, "ascii2brainfuck" + ext);
+				if (existsSync(ascii2brainfuckPath)) unlinkSync(ascii2brainfuckPath);
+			} else return true;
+		}
 
-		const result = await Promise.all([this.downloadIfNotExist(this.brainfuckPath), this.downloadIfNotExist(this.ascii2brainfuckPath)]);
+		const url = this.binaryRepo + "brainfuck" + ext;
 
-		return result.every(x => x === true);
-	}
-
-	async downloadIfNotExist(filePath) {
-		if (existsSync(filePath)) return true;
-
-		const fileName = path.basename(filePath);
-		const url = this.binaryRepo + fileName;
 		try {
 			const data = await this.fetch(url);
 			if (!data) throw void 0;
-			await fs.writeFile(filePath, data, "binary");
-			await fs.chmod(filePath, "755");
+			await fs.writeFile(this.brainfuckPath, data, "binary");
+			await fs.chmod(this.brainfuckPath, "755");
 			return true;
 		} catch (error) {
-			console.error(`Something went wrong while downloading ${fileName} from ${url}`);
-			console.error(error);
+			this.error(`Something went wrong while downloading ${fileName} from ${url}`, error);
 			return false;
 		}
 	}
@@ -127,7 +127,7 @@ module.exports = class Brainfuck extends Plugin {
 				result: `Invalid arguments. Run \`${powercord.api.commands.prefix}help brainfuck\` for more information.`
 			};
 
-		const { stdout: result, stderr } = await execFile(this.brainfuckPath, [input]).catch(stderr => ({ stderr }));
+		const { stdout: result, stderr } = await execFile(this.brainfuckPath, ["decode", input]).catch(stderr => ({ stderr }));
 		if (stderr) {
 			if (stderr.message.toLowerCase().includes("invalid brainfuck"))
 				return {
@@ -135,7 +135,7 @@ module.exports = class Brainfuck extends Plugin {
 					result: "Invalid brainfuck."
 				};
 
-			console.error("[BRAINFUCK]", stderr);
+			this.error("[BRAINFUCK]", stderr);
 			return {
 				send: false,
 				result: "I'm sorry, something went wrong. Check the console for more info."
@@ -156,9 +156,9 @@ module.exports = class Brainfuck extends Plugin {
 				result: `Invalid arguments. Run \`${powercord.api.commands.prefix}help tobrainfuck\` for more information.`
 			};
 
-		const { stdout: result, stderr } = await execFile(this.ascii2brainfuckPath, [input]).catch(stderr => ({ stderr }));
+		const { stdout: result, stderr } = await execFile(this.brainfuckPath, ["encode", input]).catch(stderr => ({ stderr }));
 		if (stderr) {
-			console.error("[BRAINFUCK]", stderr);
+			this.error("[BRAINFUCK]", stderr);
 			return {
 				send: false,
 				result: "I'm sorry, something went wrong. Check the console for more info."
